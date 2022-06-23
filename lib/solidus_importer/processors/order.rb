@@ -62,7 +62,7 @@ module SolidusImporter
       end
 
       def user
-        @user ||= Spree::User.find_by(email: email)
+        @user ||= Spree.user_class.find_by(email: email)
       end
     end
   end

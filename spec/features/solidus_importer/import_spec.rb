@@ -17,14 +17,14 @@ RSpec.describe 'Import from CSV files' do
     let(:import_type) { :customers }
     let(:csv_file_rows) { 4 }
     let(:user_emails) { ['jane.doe@acme.com', 'john.doe@acme.com'] }
-    let(:imported_customer) { Spree::User.last }
+    let(:imported_customer) { Spree.user_class.last }
     let(:state) { create(:state, abbr: 'ON', country_iso: 'CA') }
 
     before { state }
 
     it 'imports some customers' do
-      expect { import }.to change(Spree::User, :count).by(2)
-      expect(Spree::User.where(email: user_emails).count).to eq(2)
+      expect { import }.to change(Spree.user_class, :count).by(2)
+      expect(Spree.user_class.where(email: user_emails).count).to eq(2)
       expect(import.state).to eq('completed')
       expect(Spree::LogEntry).to have_received(:create!).exactly(csv_file_rows).times
     end

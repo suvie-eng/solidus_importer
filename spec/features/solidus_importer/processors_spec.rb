@@ -12,7 +12,7 @@ RSpec.describe 'Set up a some processors' do
 
   let(:processor_create_user) do
     ->(context) {
-      user = Spree::User.new(email: context[:data]['Email'])
+      user = Spree.user_class.new(email: context[:data]['Email'])
       user.password = 'a very secure password'
       context.merge!(success: user.save, user: user)
     }
@@ -49,7 +49,7 @@ RSpec.describe 'Set up a some processors' do
   end
 
   it 'creates 2 users and check the result' do
-    expect { process_import }.to change(Spree::User, :count).from(0).to(2)
+    expect { process_import }.to change(Spree.user_class, :count).from(0).to(2)
     expect(importer).to have_received(:after_import).once
     expect(importer.checks).to eq [true, nil, nil, true]
   end

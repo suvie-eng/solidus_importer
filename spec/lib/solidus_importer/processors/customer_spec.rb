@@ -45,10 +45,10 @@ RSpec.describe SolidusImporter::Processors::Customer do
           'Province Code' => 'WA'
         }
       end
-      let(:result) { context.merge(user: Spree::User.last) }
+      let(:result) { context.merge(user: Spree.user_class.last) }
 
       it 'creates a new user' do
-        expect { described_method }.to change { Spree::User.count }.by(1)
+        expect { described_method }.to change { Spree.user_class.count }.by(1)
         expect(described_method).to eq(result)
       end
 
@@ -56,10 +56,10 @@ RSpec.describe SolidusImporter::Processors::Customer do
         let!(:user) { create(:user) }
         let(:result) { context.merge(user: user) }
 
-        before { allow(Spree::User).to receive(:find_or_initialize_by).and_return(user) }
+        before { allow(Spree.user_class).to receive(:find_or_initialize_by).and_return(user) }
 
         it 'updates the user' do
-          expect { described_method }.not_to(change { Spree::User.count })
+          expect { described_method }.not_to(change { Spree.user_class.count })
           expect(described_method).to eq(result)
         end
       end
@@ -67,7 +67,7 @@ RSpec.describe SolidusImporter::Processors::Customer do
       context 'with an existing invalid user' do
         let!(:user) { create(:user).tap { |user| user.password = nil } }
 
-        before { allow(Spree::User).to receive(:find_or_initialize_by).and_return(user) }
+        before { allow(Spree.user_class).to receive(:find_or_initialize_by).and_return(user) }
 
         it 'raises an exception' do
           expect { described_method }.to raise_error(ActiveRecord::RecordInvalid, /Password can't be blank/)
